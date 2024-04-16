@@ -5,8 +5,6 @@ import com.bagusmwicaksono.hermione.members.exception.DuplicatedCredentialExcept
 import com.bagusmwicaksono.hermione.members.model.Credentials;
 import com.bagusmwicaksono.hermione.members.repository.CredentialsRepository;
 import com.bagusmwicaksono.hermione.members.utils.TestUtils;
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.databind.DatabindException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,10 +17,10 @@ import reactor.test.StepVerifier;
 
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 class CredentialsServiceTest {
@@ -33,7 +31,7 @@ class CredentialsServiceTest {
     CredentialsRepository credentialsRepository;
 
     @Test
-    void testPerformCreateCredential_whenSuccess_returnValidResponse() throws StreamReadException, DatabindException, IOException {
+    void testPerformCreateCredential_whenSuccess_returnValidResponse() throws IOException {
         Credentials credentials = TestUtils.getCredentialTestData();
 
         when(credentialsRepository.existsByEmail(anyString())).thenReturn(Mono.just(false));
@@ -50,7 +48,7 @@ class CredentialsServiceTest {
         }).verifyComplete();
     }
     @Test
-    void testPerformCreateCredential_whenDuplicateEmail_returnDuplicateError() throws StreamReadException, DatabindException, IOException {
+    void testPerformCreateCredential_whenDuplicateEmail_returnDuplicateError() throws IOException {
         Credentials credentials = TestUtils.getCredentialTestData();
 
         when(credentialsRepository.existsByEmail(anyString())).thenReturn(Mono.just(true));
@@ -64,7 +62,7 @@ class CredentialsServiceTest {
                 .verify();
     }
     @Test
-    void getAllCredentials_whenSuccess_returnAll() throws StreamReadException, DatabindException, IOException {
+    void getAllCredentials_whenSuccess_returnAll() throws IOException {
         Credentials credentials = TestUtils.getCredentialTestData();
         when(credentialsRepository.findAll()).thenReturn(Flux.just(credentials));
 
@@ -74,7 +72,7 @@ class CredentialsServiceTest {
                 .verifyComplete();
     }
     @Test
-    void performLogin_whenSuccess_returnValidResponse() throws StreamReadException, DatabindException, IOException{
+    void performLogin_whenSuccess_returnValidResponse() throws IOException{
         Credentials credentials = TestUtils.getCredentialTestData();
 
         when(credentialsRepository.findByEmailAndPassword(anyString(), anyString())).thenReturn(Mono.just(credentials));
@@ -93,7 +91,7 @@ class CredentialsServiceTest {
     }
 
     @Test
-    void performLogin_whenNotFOund_returnNotfoundError() throws StreamReadException, DatabindException, IOException{
+    void performLogin_whenNotFound_returnNotfoundError() throws IOException{
         Credentials credentials = TestUtils.getCredentialTestData();
 
         when(credentialsRepository.findByEmailAndPassword(anyString(), anyString())).thenReturn(Mono.empty());

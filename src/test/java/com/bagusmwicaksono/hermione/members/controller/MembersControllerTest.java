@@ -5,8 +5,6 @@ import com.bagusmwicaksono.hermione.members.exception.CredentialNotFoundExceptio
 import com.bagusmwicaksono.hermione.members.exception.DuplicatedCredentialException;
 import com.bagusmwicaksono.hermione.members.service.CredentialsService;
 import com.bagusmwicaksono.hermione.members.utils.TestUtils;
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.databind.DatabindException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +28,7 @@ class MembersControllerTest {
     private CredentialsService credentialsService;
 
     @Test
-    void testCreateCred_WhenSuccess_ShouldReturnValid() throws StreamReadException, DatabindException, BeansException, IOException {
+    void testCreateCred_WhenSuccess_ShouldReturnValid() throws BeansException, IOException {
         CredentialsDto credentialsDto = TestUtils.getCredentialDtoTestData();
         when(credentialsService.performCreateCredential(any())).thenReturn(Mono.just(credentialsDto));
 
@@ -42,7 +40,7 @@ class MembersControllerTest {
     }
 
     @Test
-    void testCreateCred_WhenDuplicated_ShouldReturnError() throws StreamReadException, DatabindException, BeansException, IOException {
+    void testCreateCred_WhenDuplicated_ShouldReturnError() throws BeansException, IOException {
         CredentialsDto credentialsDto = TestUtils.getCredentialDtoTestData();
         when(credentialsService.performCreateCredential(any())).thenThrow(new DuplicatedCredentialException("dummy@email"));
 
@@ -53,7 +51,7 @@ class MembersControllerTest {
     }
 
     @Test
-    void testGetAllCred_WhenSuccess_ShouldReturnValid() throws StreamReadException, DatabindException, BeansException, IOException {
+    void testGetAllCred_WhenSuccess_ShouldReturnValid() throws BeansException, IOException {
         CredentialsDto credentialsDto = TestUtils.getCredentialDtoTestData();
 
         when(credentialsService.getAllCredentials()).thenReturn(Flux.just(credentialsDto));
@@ -65,7 +63,7 @@ class MembersControllerTest {
     }
 
     @Test
-    void performLogin_WhenSuccess_ShouldReturnValid() throws StreamReadException, DatabindException, BeansException, IOException {
+    void performLogin_WhenSuccess_ShouldReturnValid() throws BeansException, IOException {
         CredentialsDto credentialsDto = TestUtils.getCredentialDtoTestData();
 
         when(credentialsService.performLogin(any())).thenReturn(Mono.just(credentialsDto));
@@ -78,7 +76,7 @@ class MembersControllerTest {
     }
 
     @Test
-    void performLogin_WheNotFound_ShouldReturnError() throws StreamReadException, DatabindException, BeansException, IOException {
+    void performLogin_WheNotFound_ShouldReturnError() throws BeansException, IOException {
         CredentialsDto credentialsDto = TestUtils.getCredentialDtoTestData();
 
         when(credentialsService.performLogin(any())).thenThrow(new CredentialNotFoundException(credentialsDto.getEmail()));
