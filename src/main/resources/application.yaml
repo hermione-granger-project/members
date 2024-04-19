@@ -3,7 +3,7 @@ spring:
     name: members
   data:
     mongodb:
-      uri: mongodb+srv://admin:root@cluster0.vwpz2pv.mongodb.net/members_db?retryWrites=true&w=majority
+      uri: ${MONGO_URI:mongodb+srv://admin:root@cluster0.vwpz2pv.mongodb.net/members_db?retryWrites=true&w=majority}
       database: members_db
 logging:
   level:
