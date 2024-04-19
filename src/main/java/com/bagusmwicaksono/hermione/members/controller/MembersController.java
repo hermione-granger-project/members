@@ -18,18 +18,21 @@ public class MembersController {
     }
 
     @PostMapping("")
+    @CrossOrigin(origins = "*")
     public Mono<CredentialsDto> createCred(@RequestBody CredentialsDto credDto){
         log.info("[CredentialsController] createCred updated credDto="+credDto.toString());
         return credentialsService.performCreateCredential(credDto);
     }
 
     @GetMapping("")
+    @CrossOrigin(origins = "*")
     public Flux<CredentialsDto> getAllCred() {
         log.info("[CredentialsController] getAllCred");
         return credentialsService.getAllCredentials();
     }
 
     @PostMapping("/login")
+    @CrossOrigin(origins = "*")
     public Mono<CredentialsDto> performLogin(@RequestBody CredentialsDto credDto){
         log.info("[CredentialsController] performLogin credDto="+credDto.toString());
         return credentialsService.performLogin(credDto);
