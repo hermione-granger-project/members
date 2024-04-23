@@ -1,6 +1,6 @@
 package com.bagusmwicaksono.hermione.members.service;
 
-import com.bagusmwicaksono.hermione.members.controller.dto.CredentialsDto;
+import com.bagusmwicaksono.hermione.members.controller.dto.MembersDto;
 import com.bagusmwicaksono.hermione.members.exception.DuplicatedCredentialException;
 import com.bagusmwicaksono.hermione.members.model.Credentials;
 import com.bagusmwicaksono.hermione.members.repository.CredentialsRepository;
@@ -37,9 +37,9 @@ class CredentialsServiceTest {
         when(credentialsRepository.existsByEmail(anyString())).thenReturn(Mono.just(false));
         when(credentialsRepository.save(any())).thenReturn(Mono.just(credentials));
 
-        CredentialsDto newCredentialsDto = new CredentialsDto();
+        MembersDto newCredentialsDto = new MembersDto();
         BeanUtils.copyProperties(credentials, newCredentialsDto);
-        Mono<CredentialsDto> resultDto = credentialsService.performCreateCredential(newCredentialsDto);
+        Mono<MembersDto> resultDto = credentialsService.performCreateCredential(newCredentialsDto);
 
         StepVerifier.create(resultDto).consumeNextWith(newCred -> {
             assertEquals(newCred.getId(), credentials.getId());
@@ -53,9 +53,9 @@ class CredentialsServiceTest {
 
         when(credentialsRepository.existsByEmail(anyString())).thenReturn(Mono.just(true));
 
-        CredentialsDto newCredentialsDto = new CredentialsDto();
+        MembersDto newCredentialsDto = new MembersDto();
         BeanUtils.copyProperties(credentials, newCredentialsDto);
-        Mono<CredentialsDto> resultDto = credentialsService.performCreateCredential(newCredentialsDto);
+        Mono<MembersDto> resultDto = credentialsService.performCreateCredential(newCredentialsDto);
 
         StepVerifier.create(resultDto)
                 .expectErrorMatches(throwable -> throwable instanceof DuplicatedCredentialException)
@@ -66,7 +66,7 @@ class CredentialsServiceTest {
         Credentials credentials = TestUtils.getCredentialTestData();
         when(credentialsRepository.findAll()).thenReturn(Flux.just(credentials));
 
-        Flux<CredentialsDto> allCredentials = credentialsService.getAllCredentials();
+        Flux<MembersDto> allCredentials = credentialsService.getAllCredentials();
 
         StepVerifier.create(allCredentials).expectNextCount(1)
                 .verifyComplete();
@@ -77,10 +77,10 @@ class CredentialsServiceTest {
 
         when(credentialsRepository.findByEmailAndPassword(anyString(), anyString())).thenReturn(Mono.just(credentials));
 
-        CredentialsDto cred = new CredentialsDto();
+        MembersDto cred = new MembersDto();
         BeanUtils.copyProperties(credentials, cred);
 
-        Mono<CredentialsDto> resultDto = credentialsService.performLogin(cred);
+        Mono<MembersDto> resultDto = credentialsService.performLogin(cred);
 
         StepVerifier.create(resultDto).consumeNextWith(foundCred ->{
             assertEquals(foundCred.getEmail(), credentials.getEmail());
@@ -96,10 +96,10 @@ class CredentialsServiceTest {
 
         when(credentialsRepository.findByEmailAndPassword(anyString(), anyString())).thenReturn(Mono.empty());
 
-        CredentialsDto cred = new CredentialsDto();
+        MembersDto cred = new MembersDto();
         BeanUtils.copyProperties(credentials, cred);
 
-        Mono<CredentialsDto> resultDto = credentialsService.performLogin(cred);
+        Mono<MembersDto> resultDto = credentialsService.performLogin(cred);
 
         StepVerifier.create(resultDto)
                 .expectError()

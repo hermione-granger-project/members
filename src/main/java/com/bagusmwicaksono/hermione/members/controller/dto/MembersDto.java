@@ -9,8 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CredentialsDto {
+public class MembersDto {
     private String id;
+    private String credId;
     private String email;
     private String username;
     private String password;

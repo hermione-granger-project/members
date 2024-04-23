@@ -1,6 +1,6 @@
 package com.bagusmwicaksono.hermione.members.controller;
 
-import com.bagusmwicaksono.hermione.members.controller.dto.CredentialsDto;
+import com.bagusmwicaksono.hermione.members.controller.dto.MembersDto;
 import com.bagusmwicaksono.hermione.members.exception.CredentialNotFoundException;
 import com.bagusmwicaksono.hermione.members.exception.DuplicatedCredentialException;
 import com.bagusmwicaksono.hermione.members.service.CredentialsService;
@@ -29,19 +29,19 @@ class MembersControllerTest {
 
     @Test
     void testCreateCred_WhenSuccess_ShouldReturnValid() throws BeansException, IOException {
-        CredentialsDto credentialsDto = TestUtils.getCredentialDtoTestData();
+        MembersDto credentialsDto = TestUtils.getCredentialDtoTestData();
         when(credentialsService.performCreateCredential(any())).thenReturn(Mono.just(credentialsDto));
 
         webTestClient.post().uri("/v1/members")
                 .bodyValue(credentialsDto)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(CredentialsDto.class);
+                .expectBody(MembersDto.class);
     }
 
     @Test
     void testCreateCred_WhenDuplicated_ShouldReturnError() throws BeansException, IOException {
-        CredentialsDto credentialsDto = TestUtils.getCredentialDtoTestData();
+        MembersDto credentialsDto = TestUtils.getCredentialDtoTestData();
         when(credentialsService.performCreateCredential(any())).thenThrow(new DuplicatedCredentialException("dummy@email"));
 
         webTestClient.post().uri("/v1/members")
@@ -52,19 +52,19 @@ class MembersControllerTest {
 
     @Test
     void testGetAllCred_WhenSuccess_ShouldReturnValid() throws BeansException, IOException {
-        CredentialsDto credentialsDto = TestUtils.getCredentialDtoTestData();
+        MembersDto credentialsDto = TestUtils.getCredentialDtoTestData();
 
         when(credentialsService.getAllCredentials()).thenReturn(Flux.just(credentialsDto));
 
         webTestClient.get().uri("/v1/members")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(CredentialsDto.class);
+                .expectBodyList(MembersDto.class);
     }
 
     @Test
     void performLogin_WhenSuccess_ShouldReturnValid() throws BeansException, IOException {
-        CredentialsDto credentialsDto = TestUtils.getCredentialDtoTestData();
+        MembersDto credentialsDto = TestUtils.getCredentialDtoTestData();
 
         when(credentialsService.performLogin(any())).thenReturn(Mono.just(credentialsDto));
 
@@ -72,12 +72,12 @@ class MembersControllerTest {
                 .bodyValue(credentialsDto)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(CredentialsDto.class);
+                .expectBodyList(MembersDto.class);
     }
 
     @Test
     void performLogin_WheNotFound_ShouldReturnError() throws BeansException, IOException {
-        CredentialsDto credentialsDto = TestUtils.getCredentialDtoTestData();
+        MembersDto credentialsDto = TestUtils.getCredentialDtoTestData();
 
         when(credentialsService.performLogin(any())).thenThrow(new CredentialNotFoundException(credentialsDto.getEmail()));
 
